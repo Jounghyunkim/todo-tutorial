@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { PlusIcon } from "@phosphor-icons/react";
 import {
   CATEGORIES,
   DEFAULT_PRIORITY,
@@ -10,13 +11,16 @@ import {
 } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { SegmentButton, SegmentGroup } from "@/components/segmented";
+
+// 옵션 한 줄: 왼쪽 라벨 + 컨트롤
+function OptionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="w-12 shrink-0 text-[0.6875rem] font-semibold text-foreground/50">
+      {children}
+    </span>
+  );
+}
 
 interface TodoInputProps {
   onAdd: (
@@ -45,83 +49,70 @@ export function TodoInput({ onAdd }: TodoInputProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <Card>
-        <CardHeader>
-          <CardTitle>할 일 추가</CardTitle>
-        </CardHeader>
-
-        <CardContent className="flex flex-col gap-3">
-          <Input
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
-            placeholder="할 일을 입력하고 Enter를 누르세요"
-            aria-label="새 할 일"
-          />
-
-          <Input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-            aria-label="마감일"
-            className="w-auto"
-          />
-
-          <div role="radiogroup" aria-label="우선순위" className="flex gap-1">
-            {PRIORITIES.map((item) => {
-              const selected = item.value === priority;
-              return (
-                <Button
-                  key={item.value}
-                  type="button"
-                  size="sm"
-                  variant={selected ? "default" : "outline"}
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => setPriority(item.value)}
-                >
-                  {item.label}
-                </Button>
-              );
-            })}
-          </div>
-
-          <div role="radiogroup" aria-label="카테고리" className="flex gap-1">
-            <Button
-              type="button"
-              size="sm"
-              variant={category === undefined ? "default" : "outline"}
-              role="radio"
-              aria-checked={category === undefined}
-              onClick={() => setCategory(undefined)}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-2.5 border-t border-black/5 bg-white/75 px-4 pt-3 pb-4 backdrop-blur-2xl sm:pb-7 dark:border-white/10 dark:bg-neutral-900/75"
+    >
+      <div className="flex items-center gap-2">
+        <OptionLabel>우선순위</OptionLabel>
+        <SegmentGroup aria-label="우선순위">
+          {PRIORITIES.map((item) => (
+            <SegmentButton
+              key={item.value}
+              selected={item.value === priority}
+              onClick={() => setPriority(item.value)}
             >
-              없음
-            </Button>
-            {CATEGORIES.map((item) => {
-              const selected = item.value === category;
-              return (
-                <Button
-                  key={item.value}
-                  type="button"
-                  size="sm"
-                  variant={selected ? "default" : "outline"}
-                  role="radio"
-                  aria-checked={selected}
-                  onClick={() => setCategory(item.value)}
-                >
-                  {item.label}
-                </Button>
-              );
-            })}
-          </div>
-        </CardContent>
+              {item.label}
+            </SegmentButton>
+          ))}
+        </SegmentGroup>
+        <Input
+          type="date"
+          value={dueDate}
+          onChange={(e) => setDueDate(e.target.value)}
+          aria-label="마감일"
+          className="h-8 min-w-0 flex-1 rounded-full border-0 bg-black/6 px-3 text-xs shadow-none dark:bg-white/10"
+        />
+      </div>
 
-        <CardFooter>
-          <Button type="submit" className="w-full">
-            추가
-          </Button>
-        </CardFooter>
-      </Card>
+      <div className="flex items-center gap-2">
+        <OptionLabel>카테고리</OptionLabel>
+        <SegmentGroup aria-label="카테고리">
+          <SegmentButton
+            selected={category === undefined}
+            onClick={() => setCategory(undefined)}
+          >
+            없음
+          </SegmentButton>
+          {CATEGORIES.map((item) => (
+            <SegmentButton
+              key={item.value}
+              selected={item.value === category}
+              onClick={() => setCategory(item.value)}
+            >
+              {item.label}
+            </SegmentButton>
+          ))}
+        </SegmentGroup>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <Input
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="새로운 할 일을 입력하고 Enter"
+          aria-label="새 할 일"
+          className="h-11 flex-1 rounded-full border-0 bg-black/6 px-4 text-sm shadow-none dark:bg-white/10"
+        />
+        <Button
+          type="submit"
+          size="icon"
+          aria-label="추가"
+          className="size-11 rounded-full bg-linear-to-br from-blue-500 to-indigo-600 text-white shadow-lg shadow-blue-500/40 hover:from-blue-500/90 hover:to-indigo-600/90"
+        >
+          <PlusIcon weight="bold" className="size-5" />
+        </Button>
+      </div>
     </form>
   );
 }

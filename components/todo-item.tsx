@@ -63,11 +63,12 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
   const category = todo.category ? CATEGORY_META[todo.category] : undefined;
 
   return (
-    <li className="flex items-center gap-3 rounded-md border border-border px-3 py-2">
+    <li className="group flex items-center gap-3 px-4 py-3 transition-colors hover:bg-black/3 dark:hover:bg-white/5">
       <Checkbox
         checked={todo.completed}
         onCheckedChange={() => onToggle(todo.id)}
         aria-label={todo.completed ? "완료 취소" : "완료로 표시"}
+        className="size-6 rounded-full border-2 border-foreground/25 bg-transparent transition-all data-[state=checked]:border-blue-500 data-[state=checked]:bg-blue-500 data-[state=checked]:text-white dark:bg-transparent dark:data-[state=checked]:bg-blue-500"
       />
 
       {editing ? (
@@ -77,14 +78,14 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
           onChange={(e) => setDraft(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={commit}
-          className="h-7 flex-1"
+          className="h-8 flex-1 rounded-lg"
           aria-label="할 일 편집"
         />
       ) : (
         <span
           onDoubleClick={startEditing}
           className={cn(
-            "flex-1 cursor-pointer break-words",
+            "flex-1 cursor-pointer text-[0.95rem] break-words transition-colors",
             todo.completed && "text-muted-foreground line-through"
           )}
         >
@@ -122,7 +123,7 @@ export function TodoItem({ todo, onToggle, onDelete, onEdit }: TodoItemProps) {
         type="button"
         variant="ghost"
         size="icon"
-        className="size-7 shrink-0 text-muted-foreground hover:text-destructive"
+        className="size-8 shrink-0 rounded-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
         onClick={() => onDelete(todo.id)}
         aria-label="삭제"
       >
