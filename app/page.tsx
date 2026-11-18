@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 import { PhoneFrame } from "@/components/phone-frame"
 import { TodoList } from "@/components/todo-list"
 import { AuroraText } from "@/components/ui/aurora-text"
@@ -42,6 +44,12 @@ export default function Page() {
               </li>
             ))}
           </ul>
+          <Link
+            href="/guide"
+            className="w-fit text-sm font-semibold text-foreground/70 underline-offset-4 hover:text-foreground hover:underline"
+          >
+            처음이신가요? 사용법 보기 →
+          </Link>
         </section>
 
         {/* 아이폰 — 큰 화면에서는 살짝 기울어져 있다가 마우스를 올리면 바로 선다 */}
